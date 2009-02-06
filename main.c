@@ -11,10 +11,10 @@
 
 static void finish(int sig);
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	int num = 0;
+	int l = 0;
 
 	/* initialize your non-curses data structures here */
 
@@ -24,7 +24,7 @@ main(int argc, char *argv[])
 	keypad(stdscr, TRUE);  /* enable keyboard mapping */
 	(void) nonl();         /* tell curses not to do NL->CR/NL on output */
 	(void) cbreak();       /* take input chars one at a time, no wait for \n */
-	(void) echo();         /* echo input - in color */
+	(void) noecho();         /* echo input - in color */
 
 	if (has_colors())
 	{
@@ -47,9 +47,24 @@ main(int argc, char *argv[])
 
 	for (;;)
 	{
-		int c = getch();     /* refresh, accept single keystroke of input */
+		int c;
+		c = getch();
 		attrset(COLOR_PAIR(num % 8));
-		num++;
+		printw("%c",c);
+		
+		if(num++ > 80)
+		{
+			num = 0; 
+			printw("\n");
+			l++;
+		}
+
+		if(l > 20)
+		{
+			l = 0;
+			erase();
+		}
+
 
 		/* process the command keystroke */
 	}
