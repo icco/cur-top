@@ -11,8 +11,7 @@
 
 static void finish(int sig);
 
-int
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
 	int num = 0;
 

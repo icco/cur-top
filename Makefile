@@ -3,7 +3,7 @@
 CC=gcc
 CFLAGS=-Wall -g -c
 LDFLAGS=-lm -lncurses
-RMFLAGS=-f
+RMFLAGS=-vf
 
 all: cur-top 
 
