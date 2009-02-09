@@ -4,17 +4,31 @@
  * @author Nat Welch
  */
 
+#include <sys/types.h>
+#include <sys/dir.h>
 #include <curses.h>
 #include <signal.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <termios.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+
 
 static void finish(int sig);
+
+void loadavg(float * a, float * b, float * c)
+{
+	FILE * proc = fopen("/proc/loadavg","r");
+	fscanf(proc,"%e %e %e",a,b,c);
+	fclose(proc);
+}
 
 int main(int argc, char *argv[])
 {
 	int num = 0;
 	int l = 0;
+	float av[3];
 
 	/* initialize your non-curses data structures here */
 
@@ -47,26 +61,10 @@ int main(int argc, char *argv[])
 
 	for (;;)
 	{
-		int c;
-		c = getch();
-		attrset(COLOR_PAIR(num % 8));
-		printw("%c",c);
-		
-		if(num++ > 80)
-		{
-			num = 0; 
-			printw("\n");
-			l++;
-		}
-
-		if(l > 20)
-		{
-			l = 0;
-			erase();
-		}
-
-
-		/* process the command keystroke */
+		loadavg(&av[0], &av[1], &av[2]);
+		printf(" %.2f, %.2f, %.2f\r",av[0], av[1], av[2]);
+		fflush(stdout);
+		sleep(1);
 	}
 
 	finish(0);               /* we're done */
